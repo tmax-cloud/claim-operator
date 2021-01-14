@@ -1,0 +1,13 @@
+apiVersion: claims.tmax.io/v1alpha1
+kind: ClusterClaim
+metadata:
+  generateName: test
+spec:
+  provider: aws
+  version: v1.17.6
+  region: us-east-2
+  sshKey: default
+  masterNum: 1
+  masterType: t3.large
+  workerNum: 1
+  workerType: t3.large
