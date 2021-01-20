@@ -44,9 +44,7 @@ const (
 	CLAIM_API_GROUP             = "claims.tmax.io"
 	CLAIM_API_Kind              = "clusterclaims"
 	CLAIM_API_GROUP_VERSION     = "claims.tmax.io/v1alpha1"
-	HCR_API_GROUP_VERSION       = "multi.hyper.tmax.io/v1"
-	HYPERCLOUD_SYSTEM_NAMESPACE = "hypercloud5-system"
-	HCR_SYSTEM_NAMESPACE        = "kube-federation-system"
+	HYPERCLOUD_SYSTEM_NAMESPACE = ""
 )
 
 var AutoAdmit bool
@@ -62,6 +60,8 @@ type ClusterClaimReconciler struct {
 // +kubebuilder:rbac:groups=claims.tmax.io,resources=clusterclaims/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=roles,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=rolebindings,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=cluster.tmax.io,resources=clustermanagers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=cluster.tmax.io,resources=clustermanagers/status,verbs=get;update;patch
 
@@ -117,15 +117,14 @@ func (r *ClusterClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 }
 
 func (r *ClusterClaimReconciler) CreateClaimRole(clusterClaim *claimsv1alpha1.ClusterClaim) error {
-	role := &rbacv1.Role{}
-	roleName := clusterClaim.Annotations["creator"] + "-" + clusterClaim.Name + "-cc-role"
-	roleKey := types.NamespacedName{Name: roleName, Namespace: HYPERCLOUD_SYSTEM_NAMESPACE}
-	if err := r.Get(context.TODO(), roleKey, role); err != nil {
+	clusterRole := &rbacv1.ClusterRole{}
+	clusterRoleName := clusterClaim.Annotations["creator"] + "-" + clusterClaim.Name + "-cc-role"
+	clusterRoleNameKey := types.NamespacedName{Name: clusterRoleName, Namespace: HYPERCLOUD_SYSTEM_NAMESPACE}
+	if err := r.Get(context.TODO(), clusterRoleNameKey, clusterRole); err != nil {
 		if errors.IsNotFound(err) {
-			newRole := &rbacv1.Role{
+			newClusterRole := &rbacv1.ClusterRole{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      roleName,
-					Namespace: HYPERCLOUD_SYSTEM_NAMESPACE,
+					Name: clusterRoleName,
 				},
 				Rules: []rbacv1.PolicyRule{
 					{APIGroups: []string{CLAIM_API_GROUP}, Resources: []string{"clusterclaims"},
@@ -134,10 +133,10 @@ func (r *ClusterClaimReconciler) CreateClaimRole(clusterClaim *claimsv1alpha1.Cl
 						ResourceNames: []string{clusterClaim.Name}, Verbs: []string{"get"}},
 				},
 			}
-			ctrl.SetControllerReference(clusterClaim, newRole, r.Scheme)
-			err = r.Create(context.TODO(), newRole)
+			ctrl.SetControllerReference(clusterClaim, newClusterRole, r.Scheme)
+			err = r.Create(context.TODO(), newClusterRole)
 			if err != nil {
-				log.Error(err, "Failed to create "+roleName+" role.")
+				log.Error(err, "Failed to create "+clusterRoleName+" role.")
 				return err
 			}
 		} else {
@@ -146,34 +145,32 @@ func (r *ClusterClaimReconciler) CreateClaimRole(clusterClaim *claimsv1alpha1.Cl
 		}
 	}
 
-	roleBinding := &rbacv1.RoleBinding{}
-	roleBindingName := clusterClaim.Annotations["creator"] + "-" + clusterClaim.Name + "-cc-rolebinding"
-	roleBindingKey := types.NamespacedName{Name: clusterClaim.Name, Namespace: HYPERCLOUD_SYSTEM_NAMESPACE}
-	if err := r.Get(context.TODO(), roleBindingKey, roleBinding); err != nil {
+	clusterRoleBinding := &rbacv1.ClusterRoleBinding{}
+	clusterRoleBindingName := clusterClaim.Annotations["creator"] + "-" + clusterClaim.Name + "-cc-rolebinding"
+	clusterRoleBindingKey := types.NamespacedName{Name: clusterClaim.Name, Namespace: HYPERCLOUD_SYSTEM_NAMESPACE}
+	if err := r.Get(context.TODO(), clusterRoleBindingKey, clusterRoleBinding); err != nil {
 		if errors.IsNotFound(err) {
-			newRoleBinding := &rbacv1.RoleBinding{
+			newClusterRoleBinding := &rbacv1.ClusterRoleBinding{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      roleBindingName,
-					Namespace: HYPERCLOUD_SYSTEM_NAMESPACE,
+					Name: clusterRoleBindingName,
 				},
 				RoleRef: rbacv1.RoleRef{
 					APIGroup: "rbac.authorization.k8s.io",
-					Kind:     "Role",
-					Name:     roleName,
+					Kind:     "ClusterRole",
+					Name:     clusterRoleName,
 				},
 				Subjects: []rbacv1.Subject{
 					{
 						APIGroup: "rbac.authorization.k8s.io",
 						Kind:     "User",
 						Name:     clusterClaim.Annotations["creator"],
-						// Namespace: HYPERCLOUD_SYSTEM_NAMESPACE,
 					},
 				},
 			}
-			ctrl.SetControllerReference(clusterClaim, newRoleBinding, r.Scheme)
-			err = r.Create(context.TODO(), newRoleBinding)
+			ctrl.SetControllerReference(clusterClaim, newClusterRoleBinding, r.Scheme)
+			err = r.Create(context.TODO(), newClusterRoleBinding)
 			if err != nil {
-				log.Error(err, "Failed to create "+roleBindingName+" role.")
+				log.Error(err, "Failed to create "+clusterRoleBindingName+" role.")
 				return err
 			}
 		} else {
@@ -187,8 +184,7 @@ func (r *ClusterClaimReconciler) CreateClaimRole(clusterClaim *claimsv1alpha1.Cl
 func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alpha1.ClusterClaim) error {
 	clm := &clusterv1alpha1.ClusterManager{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      clusterClaim.Name,
-			Namespace: HYPERCLOUD_SYSTEM_NAMESPACE,
+			Name: clusterClaim.Name,
 			Annotations: map[string]string{
 				"owner": clusterClaim.Annotations["creator"],
 			},
@@ -229,7 +225,7 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 
 func (r *ClusterClaimReconciler) requeueClusterClaimsForClusterManager(o handler.MapObject) []ctrl.Request {
 	clm := o.Object.(*clusterv1alpha1.ClusterManager)
-	log := r.Log.WithValues("objectMapper", "clusterManagerToClusterClaim", "namespace", clm.Namespace, "clusterManager", clm.Name)
+	log := r.Log.WithValues("objectMapper", "clusterManagerToClusterClaim", "clusterManager", clm.Name)
 
 	// Don't handle deleted clusterManager
 	// if !clm.ObjectMeta.DeletionTimestamp.IsZero() {

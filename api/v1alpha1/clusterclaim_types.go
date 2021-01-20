@@ -25,15 +25,24 @@ import (
 
 // ClusterClaimSpec defines the desired state of ClusterClaim
 type ClusterClaimSpec struct {
+	// The name of the cluster to be created
 	ClusterName string `json:"clusterName,omitempty"`
-	Provider    string `json:"provider,omitempty"`
-	Version     string `json:"version,omitempty"`
-	Region      string `json:"region,omitempty"`
-	SshKey      string `json:"sshKey,omitempty"`
-	MasterNum   int    `json:"masterNum,omitempty"`
-	MasterType  string `json:"masterType,omitempty"`
-	WorkerNum   int    `json:"workerNum,omitempty"`
-	WorkerType  string `json:"workerType,omitempty"`
+	// The name of cloud provider where VM is created
+	Provider string `json:"provider,omitempty"`
+	// The version of kubernetes
+	Version string `json:"version,omitempty"`
+	// The region where VM is working
+	Region string `json:"region,omitempty"`
+	// The ssh key info to access VM
+	SshKey string `json:"sshKey,omitempty"`
+	// The number of master node
+	MasterNum int `json:"masterNum,omitempty"`
+	// The type of VM for master node
+	MasterType string `json:"masterType,omitempty"`
+	// The number of worker node
+	WorkerNum int `json:"workerNum,omitempty"`
+	// The type of VM for worker node
+	WorkerType string `json:"workerType,omitempty"`
 }
 
 // ClusterClaimStatus defines the observed state of ClusterClaim
@@ -47,7 +56,7 @@ type ClusterClaimStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:shortName=cc,scope=Namespaced
+// +kubebuilder:resource:shortName=cc,scope=Cluster
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.phase`
 // +kubebuilder:printcolumn:name="Reason",type=string,JSONPath=`.status.reason`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
