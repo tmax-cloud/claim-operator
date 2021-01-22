@@ -24,8 +24,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
-
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 )
 
 const (
@@ -54,12 +52,12 @@ var _ webhook.Defaulter = &ClusterClaim{}
 func (r *ClusterClaim) Default() {
 	clusterclaimlog.Info("default", "name", r.Name)
 
-	if len(r.Name) > maxGeneratedNameLength {
-		r.Name = r.Name[:maxGeneratedNameLength]
-	}
+	// if len(r.Name) > maxGeneratedNameLength {
+	// r.Name = r.Name[:maxGeneratedNameLength]
+	// }
 	// return fmt.Sprintf("%s%s", base, utilrand.String(randomLength))
 
-	r.Name = r.Name + "-" + utilrand.String(randomLength)
+	// r.Name = r.Name + "-" + utilrand.String(randomLength)
 	// r.GenerateName = r.GenerateName + "-"
 	// utilrand.String(randomLength)
 	// r.Name = r.Name + r.Annotations["creator"]
@@ -84,7 +82,7 @@ func (r *ClusterClaim) ValidateUpdate(old runtime.Object) error {
 	clusterclaimlog.Info("validate update", "name", r.Name)
 	oldClusterClaim := old.(*ClusterClaim).DeepCopy()
 	if !reflect.DeepEqual(r.Spec, oldClusterClaim.Spec) {
-		return errors.New("test")
+		return errors.New("Cannot modify clusterClaim")
 	}
 	// TODO(user): fill in your validation logic upon object update.
 	return nil

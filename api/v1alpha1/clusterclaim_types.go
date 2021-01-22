@@ -25,24 +25,33 @@ import (
 
 // ClusterClaimSpec defines the desired state of ClusterClaim
 type ClusterClaimSpec struct {
-	// The name of the cluster to be created
-	ClusterName string `json:"clusterName,omitempty"`
+	// +kubebuilder:validation:Required
 	// The name of cloud provider where VM is created
 	Provider string `json:"provider,omitempty"`
-	// The version of kubernetes
-	Version string `json:"version,omitempty"`
+	// +kubebuilder:validation:Required
 	// The region where VM is working
 	Region string `json:"region,omitempty"`
-	// The ssh key info to access VM
-	SshKey string `json:"sshKey,omitempty"`
+	// +kubebuilder:validation:Required
+	// The name of the cluster to be created
+	ClusterName string `json:"clusterName,omitempty"`
+	// +kubebuilder:validation:Required
+	// The version of kubernetes
+	Version string `json:"version,omitempty"`
+	// +kubebuilder:validation:Required
 	// The number of master node
 	MasterNum int `json:"masterNum,omitempty"`
+	// +kubebuilder:validation:Required
 	// The type of VM for master node
 	MasterType string `json:"masterType,omitempty"`
+	// +kubebuilder:validation:Required
 	// The number of worker node
 	WorkerNum int `json:"workerNum,omitempty"`
+	// +kubebuilder:validation:Required
 	// The type of VM for worker node
 	WorkerType string `json:"workerType,omitempty"`
+	// +kubebuilder:validation:Required
+	// The ssh key info to access VM
+	SshKey string `json:"sshKey,omitempty"`
 }
 
 // ClusterClaimStatus defines the observed state of ClusterClaim
