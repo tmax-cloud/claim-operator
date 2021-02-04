@@ -83,7 +83,6 @@ spec:
               type: string
             phase:
               enum:
-              - Created
               - Awaiting
               - Admitted
               - Success

@@ -1,7 +1,7 @@
 apiVersion: claims.tmax.io/v1alpha1
 kind: ClusterClaim
 metadata:
-  generateName: test
+  name: test
 spec:
   provider: aws
   version: v1.17.6

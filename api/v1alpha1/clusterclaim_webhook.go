@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"errors"
-	"reflect"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -81,11 +80,15 @@ func (r *ClusterClaim) ValidateCreate() error {
 func (r *ClusterClaim) ValidateUpdate(old runtime.Object) error {
 	clusterclaimlog.Info("validate update", "name", r.Name)
 	oldClusterClaim := old.(*ClusterClaim).DeepCopy()
-	if !reflect.DeepEqual(r.Spec, oldClusterClaim.Spec) {
-		return errors.New("Cannot modify clusterClaim")
+
+	if oldClusterClaim.Status.Phase == "Awaiting" {
+		return nil
+		// if !reflect.DeepEqual(r.Spec, oldClusterClaim.Spec) {
+		// 	return errors.New("Cannot modify clusterClaim")
+		// }
 	}
+	return errors.New("Cannot modify clusterClaim after approval")
 	// TODO(user): fill in your validation logic upon object update.
-	return nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type

@@ -78,11 +78,12 @@ func (r *ClusterClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		}
 		log.Error(err, "Failed to get ClusterClaim")
 		return ctrl.Result{}, err
-	} else if clusterClaim.Status.Phase == "" {
-		if err := r.CreateClaimRole(clusterClaim); err != nil {
-			return ctrl.Result{}, err
-		}
 	}
+	// else if clusterClaim.Status.Phase == "" {
+	// 	if err := r.CreateClaimRole(clusterClaim); err != nil {
+	// 		return ctrl.Result{}, err
+	// 	}
+	// }
 
 	if AutoAdmit == false {
 		if clusterClaim.Status.Phase == "" {
