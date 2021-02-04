@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: tmaxcloudck/claim-operator
-  newTag: b5.0.2.3
+  newTag: b5.0.2.5

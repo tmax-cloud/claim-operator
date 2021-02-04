@@ -187,7 +187,7 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 		ObjectMeta: metav1.ObjectMeta{
 			Name: clusterClaim.Name,
 			Annotations: map[string]string{
-				"owner": clusterClaim.Annotations["creator"],
+				"owner": clusterClaim.Annotations["owner"],
 			},
 		},
 		FakeObjectMeta: clusterv1alpha1.FakeObjectMeta{
@@ -204,7 +204,7 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 			WorkerType: clusterClaim.Spec.WorkerType,
 		},
 		Status: clusterv1alpha1.ClusterManagerStatus{
-			Owner: clusterClaim.Annotations["creator"],
+			Owner: clusterClaim.Annotations["owner"],
 		},
 	}
 	err := r.Create(context.TODO(), clm)
