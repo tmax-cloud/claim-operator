@@ -8,7 +8,7 @@ require (
 	github.com/onsi/ginkgo v1.14.2
 	github.com/onsi/gomega v1.10.3
 	github.com/prometheus/common v0.14.0
-	github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210109105810-9bf04e3af331
+	github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210205050522-69310cb89233 
 	k8s.io/api v0.19.3
 	k8s.io/apimachinery v0.19.3
 	k8s.io/client-go v0.19.3

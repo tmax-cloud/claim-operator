@@ -72,6 +72,10 @@ func (r *ClusterClaim) ValidateCreate() error {
 	// "clusterclaim.name"-suffix로 서비스 인스턴스 객체가 만들어 진게 있는지 확인
 	clusterclaimlog.Info("validate create", "name", r.Name)
 
+	// if r.Provider == "aws" {
+
+	// }
+
 	// TODO(user): fill in your validation logic upon object creation.
 	return nil
 }

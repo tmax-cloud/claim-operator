@@ -78,12 +78,11 @@ func (r *ClusterClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		}
 		log.Error(err, "Failed to get ClusterClaim")
 		return ctrl.Result{}, err
+	} else if clusterClaim.Status.Phase == "" {
+		if err := r.CreateClaimRole(clusterClaim); err != nil {
+			return ctrl.Result{}, err
+		}
 	}
-	// else if clusterClaim.Status.Phase == "" {
-	// 	if err := r.CreateClaimRole(clusterClaim); err != nil {
-	// 		return ctrl.Result{}, err
-	// 	}
-	// }
 
 	if AutoAdmit == false {
 		if clusterClaim.Status.Phase == "" {
@@ -187,7 +186,7 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 		ObjectMeta: metav1.ObjectMeta{
 			Name: clusterClaim.Name,
 			Annotations: map[string]string{
-				"owner": clusterClaim.Annotations["owner"],
+				"owner": clusterClaim.Annotations["creator"],
 			},
 		},
 		FakeObjectMeta: clusterv1alpha1.FakeObjectMeta{
@@ -204,7 +203,9 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 			WorkerType: clusterClaim.Spec.WorkerType,
 		},
 		Status: clusterv1alpha1.ClusterManagerStatus{
-			Owner: clusterClaim.Annotations["owner"],
+			Owner: map[string]string{
+				clusterClaim.Annotations["creator"]: "admin",
+			},
 		},
 	}
 	err := r.Create(context.TODO(), clm)
