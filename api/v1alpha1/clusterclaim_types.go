@@ -27,31 +27,31 @@ import (
 type ClusterClaimSpec struct {
 	// +kubebuilder:validation:Required
 	// The name of cloud provider where VM is created
-	Provider string `json:"provider,omitempty"`
+	Provider string `json:"provider"`
 	// +kubebuilder:validation:Required
 	// The region where VM is working
-	Region string `json:"region,omitempty"`
+	Region string `json:"region"`
 	// +kubebuilder:validation:Required
 	// The name of the cluster to be created
-	ClusterName string `json:"clusterName,omitempty"`
+	ClusterName string `json:"clusterName"`
 	// +kubebuilder:validation:Required
 	// The version of kubernetes
-	Version string `json:"version,omitempty"`
+	Version string `json:"version"`
 	// +kubebuilder:validation:Required
 	// The number of master node
-	MasterNum int `json:"masterNum,omitempty"`
+	MasterNum int `json:"masterNum"`
 	// +kubebuilder:validation:Required
 	// The type of VM for master node
-	MasterType string `json:"masterType,omitempty"`
+	MasterType string `json:"masterType"`
 	// +kubebuilder:validation:Required
 	// The number of worker node
-	WorkerNum int `json:"workerNum,omitempty"`
+	WorkerNum int `json:"workerNum"`
 	// +kubebuilder:validation:Required
 	// The type of VM for worker node
-	WorkerType string `json:"workerType,omitempty"`
+	WorkerType string `json:"workerType"`
 	// +kubebuilder:validation:Required
 	// The ssh key info to access VM
-	SshKey string `json:"sshKey,omitempty"`
+	SshKey string `json:"sshKey"`
 }
 
 // ClusterClaimStatus defines the observed state of ClusterClaim

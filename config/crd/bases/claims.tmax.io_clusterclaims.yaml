@@ -75,6 +75,16 @@ spec:
             workerType:
               description: The type of VM for worker node
               type: string
+          required:
+          - clusterName
+          - masterNum
+          - masterType
+          - provider
+          - region
+          - sshKey
+          - version
+          - workerNum
+          - workerType
           type: object
         status:
           description: ClusterClaimStatus defines the observed state of ClusterClaim

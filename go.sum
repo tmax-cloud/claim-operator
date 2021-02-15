@@ -603,6 +603,8 @@ github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210109083929-66092f7aa1f
 github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210109083929-66092f7aa1fc/go.mod h1:yRIZKfTe7BB/HY0PjJdKntDf/TG3qHav94aDso5Sqkw=
 github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210109105810-9bf04e3af331 h1:Cfg3FSQl3wNAobqyirrYVRR/Lz8zOoZK/lyLa0FMuSw=
 github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210109105810-9bf04e3af331/go.mod h1:yRIZKfTe7BB/HY0PjJdKntDf/TG3qHav94aDso5Sqkw=
+github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210204095704-48abdc5db4b8 h1:M/IZ8d0TgumpC8dvSnJyFOaQZizQFgPZ0yZq7zzWUFs=
+github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210204095704-48abdc5db4b8/go.mod h1:yRIZKfTe7BB/HY0PjJdKntDf/TG3qHav94aDso5Sqkw=
 github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210205050522-69310cb89233 h1:SOHR6sfnN5bYdM3SmCg2ge+aC1pviKFw1TuWvDJ4Htc=
 github.com/tmax-cloud/cluster-manager-operator v0.0.0-20210205050522-69310cb89233/go.mod h1:yRIZKfTe7BB/HY0PjJdKntDf/TG3qHav94aDso5Sqkw=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20170815181823-89b8d40f7ca8/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=

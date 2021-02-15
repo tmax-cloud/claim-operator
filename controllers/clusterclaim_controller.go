@@ -203,6 +203,7 @@ func (r *ClusterClaimReconciler) CreateClusterManager(clusterClaim *claimsv1alph
 			WorkerType: clusterClaim.Spec.WorkerType,
 		},
 		Status: clusterv1alpha1.ClusterManagerStatus{
+			// Owner: clusterClaim.Annotations["creator"],
 			Owner: map[string]string{
 				clusterClaim.Annotations["creator"]: "admin",
 			},
