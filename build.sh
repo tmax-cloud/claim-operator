@@ -1,4 +1,4 @@
 #!/bin/sh
-img=tmaxcloudck/claim-operator:b5.0.2.8
+img=tmaxcloudck/claim-operator:b5.0.4.0
 docker rmi $img
-make docker-build docker-push IMG=$img
+make docker-build deploy IMG=$img
